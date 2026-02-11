@@ -709,17 +709,19 @@
   }
 
   .admin-trigger {
-    font-size: 0.7rem;
-    color: rgba(201, 150, 26, 0.2);
+    font-size: 2rem;
+    color: var(--gold-light);
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
     border: none;
     background: none;
-    font-family: 'DM Sans', sans-serif;
+    padding: 10px;
+    filter: brightness(1.2);
   }
 
   .admin-trigger:hover {
-    color: rgba(201, 150, 26, 0.5);
+    transform: scale(1.2);
+    filter: brightness(1.5) drop-shadow(0 0 8px rgba(201, 150, 26, 0.5));
   }
 
   /* Loading spinner */
@@ -916,7 +918,7 @@
     <a class="lookup-link" onclick="showLookup()">Look up & modify your response</a>
   </div>
 
-  <!-- Footer with hidden admin trigger -->
+  <!-- Admin access -->
   <div class="footer">
     <button class="admin-trigger" onclick="showAdminLogin()">🐾</button>
   </div>
@@ -1341,6 +1343,11 @@
   document.getElementById('adminPass').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') doAdminLogin();
   });
+
+  // Auto-open admin panel if ?admin=true is in URL
+  if (new URLSearchParams(window.location.search).get('admin') === 'true') {
+    showAdminLogin();
+  }
 </script>
 
 </body>
