@@ -770,7 +770,7 @@
 
   .guest-row {
     display: grid;
-    grid-template-columns: 1.3fr 0.6fr 0.5fr 0.8fr 1.2fr;
+    grid-template-columns: 1.3fr 0.6fr 0.5fr 0.8fr 1.2fr 0.4fr;
     gap: 8px;
     padding: 14px 16px;
     background: rgba(255, 248, 231, 0.05);
@@ -827,6 +827,22 @@
     font-size: 0.8rem;
     opacity: 0.8;
     font-style: italic;
+  }
+
+  .delete-btn {
+    background: rgba(220, 53, 69, 0.2);
+    border: 1px solid rgba(220, 53, 69, 0.4);
+    color: #ff6b6b;
+    border-radius: 6px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+  }
+
+  .delete-btn:hover {
+    background: rgba(220, 53, 69, 0.5);
+    color: #fff;
   }
 
   .admin-empty {
@@ -1595,6 +1611,7 @@
         <span>People</span>
         <span>Pet</span>
         <span>Note</span>
+        <span></span>
       </div>
     `;
 
@@ -1608,11 +1625,26 @@
           <span class="guest-count">${g.attending ? g.guestCount : '—'}</span>
           <span class="guest-pet">${g.hasPet ? '🐾 ' + escapeHtml(g.petName || 'Yes') : '—'}</span>
           <span class="guest-note">${g.guestNote ? escapeHtml(g.guestNote) : '—'}</span>
+          <span><button class="delete-btn" onclick="deleteGuest('${g.id}', '${escapeHtml(g.name)}')">🗑</button></span>
         </div>
       `;
     });
 
     listEl.innerHTML = html;
+  }
+
+  // =============================================
+  // Delete Guest
+  // =============================================
+  async function deleteGuest(id, name) {
+    if (!confirm(`Delete RSVP from ${name}? This cannot be undone.`)) return;
+    try {
+      await db.collection('rsvps').doc(id).delete();
+      loadAdminData();
+    } catch (err) {
+      alert('Error deleting entry. Please try again.');
+      console.error(err);
+    }
   }
 
   // =============================================
