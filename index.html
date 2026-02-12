@@ -83,6 +83,8 @@
     text-align: center;
     margin-bottom: 36px;
     animation: fadeInDown 0.8s ease-out;
+    position: relative;
+    overflow: visible;
   }
 
   @keyframes fadeInDown {
@@ -167,6 +169,7 @@
   }
 
   /* Side by side info row */
+
   .info-row {
     display: flex;
     align-items: center;
@@ -767,7 +770,7 @@
 
   .guest-row {
     display: grid;
-    grid-template-columns: 1.5fr 0.7fr 0.6fr 1fr;
+    grid-template-columns: 1.3fr 0.6fr 0.5fr 0.8fr 1.2fr;
     gap: 8px;
     padding: 14px 16px;
     background: rgba(255, 248, 231, 0.05);
@@ -817,6 +820,13 @@
   .guest-pet {
     color: var(--gold-light);
     font-size: 0.85rem;
+  }
+
+  .guest-note {
+    color: var(--cream-dark);
+    font-size: 0.8rem;
+    opacity: 0.8;
+    font-style: italic;
   }
 
   .admin-empty {
@@ -977,7 +987,6 @@
   <!-- Header -->
   <div class="invite-header">
     <div class="invite-badge">🐾 You're Invited 🐾</div>
-
     <!-- Curved title using SVG -->
     <div class="curved-title-wrap">
       <svg viewBox="0 0 500 200" class="curved-title-svg">
@@ -1097,6 +1106,12 @@
           <input type="text" class="form-input" id="petName" placeholder="e.g. Buddy, Luna, Max...">
         </div>
       </div>
+    </div>
+
+    
+    <div class="form-group">
+      <label class="form-label">Note for the host (optional)</label>
+      <textarea class="form-input" id="guestNote" placeholder="Any message, dietary needs, or special requests..." rows="3" style="resize:vertical;"></textarea>
     </div>
 
     <button class="submit-btn" id="submitBtn" onclick="submitRSVP()">
@@ -1345,6 +1360,7 @@
       guestCount: attending ? parseInt(document.getElementById('guestCount').value) : 0,
       hasPet: attending ? document.getElementById('hasPet').checked : false,
       petName: (attending && document.getElementById('hasPet').checked) ? document.getElementById('petName').value.trim() : '',
+      guestNote: document.getElementById('guestNote').value.trim(),
       updatedAt: new Date().toISOString()
     };
 
@@ -1473,6 +1489,9 @@
           document.getElementById('petName').value = data.petName;
         }
       }
+      if (data.guestNote) {
+        document.getElementById('guestNote').value = data.guestNote;
+      }
 
       closeLookup();
       showMessage(document.getElementById('formMessage'), 'info', `Found your RSVP, ${data.name}! Make changes and resubmit.`);
@@ -1575,6 +1594,7 @@
         <span>Status</span>
         <span>People</span>
         <span>Pet</span>
+        <span>Note</span>
       </div>
     `;
 
@@ -1587,6 +1607,7 @@
           </span>
           <span class="guest-count">${g.attending ? g.guestCount : '—'}</span>
           <span class="guest-pet">${g.hasPet ? '🐾 ' + escapeHtml(g.petName || 'Yes') : '—'}</span>
+          <span class="guest-note">${g.guestNote ? escapeHtml(g.guestNote) : '—'}</span>
         </div>
       `;
     });
