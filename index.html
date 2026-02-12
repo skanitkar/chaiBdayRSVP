@@ -1550,6 +1550,10 @@
     document.getElementById('adminLogin').style.display = 'none';
     document.getElementById('adminDashboard').style.display = 'block';
 
+    await loadAdminData();
+  }
+
+  async function loadAdminData() {
     if (!firebaseReady) {
       document.getElementById('guestList').innerHTML = '<div class="admin-empty">Firebase not configured. No data to display.</div>';
       return;
