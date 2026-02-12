@@ -1625,7 +1625,7 @@
           <span class="guest-count">${g.attending ? g.guestCount : '—'}</span>
           <span class="guest-pet">${g.hasPet ? '🐾 ' + escapeHtml(g.petName || 'Yes') : '—'}</span>
           <span class="guest-note">${g.guestNote ? escapeHtml(g.guestNote) : '—'}</span>
-          <span><button class="delete-btn" onclick="deleteGuest('${g.id}', '${escapeHtml(g.name)}')">🗑</button></span>
+          <span><button class="delete-btn" data-id="${g.id}" data-name="${escapeHtml(g.name)}">🗑</button></span>
         </div>
       `;
     });
@@ -1634,18 +1634,26 @@
   }
 
   // =============================================
-  // Delete Guest
+  // Delete Guest (event delegation)
   // =============================================
-  async function deleteGuest(id, name) {
-    if (!confirm(`Delete RSVP from ${name}? This cannot be undone.`)) return;
+  document.getElementById('guestList').addEventListener('click', async function(e) {
+    const btn = e.target.closest('.delete-btn');
+    if (!btn) return;
+    const id = btn.dataset.id;
+    const name = btn.dataset.name;
+    if (!confirm('Delete RSVP from ' + name + '? This cannot be undone.')) return;
+    btn.disabled = true;
+    btn.textContent = '...';
     try {
       await db.collection('rsvps').doc(id).delete();
       loadAdminData();
     } catch (err) {
       alert('Error deleting entry. Please try again.');
       console.error(err);
+      btn.disabled = false;
+      btn.textContent = '🗑';
     }
-  }
+  });
 
   // =============================================
   // Utilities
